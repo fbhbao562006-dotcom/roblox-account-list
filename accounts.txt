@@ -1,8 +1,7 @@
 -- ================== CHỐNG CHẠY TRÙNG (theo server) ==================
--- Dùng JobId thay vì cờ true/false để teleport sang server mới vẫn chạy lại được
 if getgenv().TCFG_JobId == game.JobId then return end
 getgenv().TCFG_JobId = game.JobId
-
+ 
 -- ================== THÔNG BÁO TỪNG BƯỚC ==================
 local function notify(t)
     print("[Autoexec] " .. t)
@@ -15,39 +14,68 @@ local function notify(t)
     end)
 end
 notify("Script bắt đầu chạy")
-
+ 
 -- ================== ĐỢI GAME / NGƯỜI CHƠI ==================
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 notify("Game đã load")
-
+ 
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+ 
 local plr = Players.LocalPlayer
 if not plr then
     Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
     plr = Players.LocalPlayer
 end
-
+ 
 plr:WaitForChild("PlayerGui")
-
+ 
+-- Đợi nhân vật có đủ bộ phận (tối đa 15 giây)
 local waited = 0
-while not plr.Character and waited < 10 do
+while waited < 15 do
+    local char = plr.Character
+    if char and char:FindFirstChild("HumanoidRootPart") and char:FindFirstChildOfClass("Humanoid") then
+        break
+    end
     task.wait(0.25)
     waited += 0.25
 end
-
-task.wait(1) -- nếu script lỗi do load sớm thì tăng lên 2-3
 notify("Người chơi sẵn sàng")
-
--- Tắt render 3D sớm để máy đỡ nặng
-pcall(function()
-    game:GetService("RunService"):Set3dRenderingEnabled(false)
-end)
-
+ 
+-- ================== ĐỢI GAME HẾT LAG LÚC VÀO ==================
+-- Game thường lag nặng vài giây đầu khi vừa vào. Nạp hub lúc đó sẽ làm hub bật chức năng rất chậm.
+-- Đoạn này chờ tới khi FPS ổn định (>= 25) rồi mới tải hub, tối đa 20 giây.
+local function waitStableFps(minFps, timeout)
+    local start = os.clock()
+    local frames, t0 = 0, os.clock()
+    local conn = RunService.Heartbeat:Connect(function()
+        frames += 1
+    end)
+    local stable = false
+    while os.clock() - start < timeout do
+        task.wait(1)
+        local now = os.clock()
+        local fps = frames / (now - t0)
+        frames, t0 = 0, now
+        if fps >= minFps then
+            stable = true
+            break
+        end
+    end
+    conn:Disconnect()
+    return stable
+end
+ 
+notify("Đang đợi game ổn định...")
+local stable = waitStableFps(25, 20)
+notify(stable and "Game đã ổn định" or "Hết thời gian chờ, vẫn tải hub")
+task.wait(1)
+ 
 -- ================== CONFIG ==================
 script_key = "oRcqKKmdvQEmkNqhEjjfFWcgYGqKeouQ"
-getgenv().DisableGui = false -- để false cho tới khi chắc chắn script chạy ổn, rồi đổi lại true
+getgenv().DisableGui = true
 getgenv().TCFG = {
     AutoFarm = true,
     CloseGUI = true,
@@ -55,31 +83,31 @@ getgenv().TCFG = {
     AutoExecute = false,
     FailSafe = true,
     FailSafeTimer = 19,
-
+ 
     EquipWeapon = false,
     Weapon = "Blades",
-
+ 
     HoverMethod = "Regular",
     HoverSpeed = 2000,
-
+ 
     Disable3dRendering = true,
     NoTitanLag = true,
-
+ 
     MissionTimer = 20,
     MultiHit = 9,
     InfiniteSpears = true,
-
+ 
     AutoRetry = true,
     AutoReload = true,
     LobbyReturn = true,
     LobbyReturnAmount = 15,
-
+ 
     StreakDie = true,
     StreakToDieAt = 5000,
     LeaveIfOtherPlayers = true,
-
+ 
     AutoStart = true,
-    AutoStartDelay = 5, -- nếu bị lỗi vào map thì tăng lên 10-15
+    AutoStartDelay = 10, -- nếu hub bật chậm hoặc lỗi vào map thì tăng lên 15
     AutoStartType = "Missions",
     AutoStartMap = "Shiganshina",
     AutoStartObjective = "Breach",
@@ -89,50 +117,50 @@ getgenv().TCFG = {
         "Oddball", "Injury Prone", "Chronic Injuries", "Fog",
         "Glass Cannon", "Time Trial"
     },
-
+ 
     AutoSpearQuests = false,
-
+ 
     AutoUpgrade = true,
     AutoPrestige = true,
     PrestigeBoost = "Gold Boost",
     PrestigeGold1 = 0,
     PrestigeGold2 = 0,
-    PrestigeGold3 = 600000000,
-    PrestigeGold4 = 600000000,
-    PrestigeGold5 = 600000000,
-
+    PrestigeGold3 = 300000000,
+    PrestigeGold4 = 550000000,
+    PrestigeGold5 = 750000000,
+ 
     AutoBoosts = true,
     Boosts = {"2x Gold Boost [30m]"},
-
+ 
     ClaimQuests = true,
     AutoSkillTree = true,
     LeftPath = "Skill Cooldown",
     MiddlePath = "Damage",
     RightPath = "Damage Reduction",
     PathPriority = "Middle",
-
+ 
     DeletePerks = true,
     PerksToDelete = {"Common"},
-
+ 
     EquipPerks = true,
     BodySlot = "Unparalleled Strength",
     OffenseSlot = "Kengo",
     DefenseSlot = "Immortal",
     SupportSlot = "Tatsujin",
-
+ 
     UpgradePerks = true,
     SlotToUpgrade = "Body",
     RarityToUpgradeWith = {"Common", "Rare", "Epic"},
-
+ 
     AutoSlot = true,
     Slot = "A",
     PrivateServerCode = "",
-
+ 
     Webhook = true,
     WebhookLink = "YOUR_DISCORD_WEBHOOK_URL",
     WebhookDiscordID = "473755357274046464",
     WebhookShowUsername = true,
-
+ 
     RollFamily = false,
     Families = {
         "FRITZ", "HELOS", "SHIKI", "ACKERMAN", "YEAGER",
@@ -147,11 +175,14 @@ getgenv().TCFG = {
     DepositMythics = false,
     PingOnMythicFamily = false,
 }
-
+ 
+-- Giữ bản sao config để khôi phục nếu hub làm mất hoặc ghi đè
+local configBackup = getgenv().TCFG
+ 
 -- ================== LOADER ==================
 local url = "https://api.luarmor.net/files/v4/loaders/5bfd68232034676923088ca8b6698be7.lua"
 local success = false
-
+ 
 notify("Đang tải loader...")
 for attempt = 1, 5 do
     local ok, err = pcall(function()
@@ -165,9 +196,16 @@ for attempt = 1, 5 do
     notify("Lần " .. attempt .. " lỗi, thử lại...")
     task.wait(1)
 end
-
+ 
 if success then
     notify("Loader chạy xong")
+    -- Nếu hub làm mất config trong vài giây đầu thì đặt lại
+    task.delay(5, function()
+        if getgenv().TCFG == nil then
+            getgenv().TCFG = configBackup
+            warn("[Autoexec] Config bị mất, đã khôi phục")
+        end
+    end)
 else
     getgenv().TCFG_JobId = nil
     notify("Tải script thất bại sau 5 lần thử")
