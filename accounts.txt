@@ -1,58 +1,155 @@
-VernonNorthrop193
-delgervrampa1
-darbyalocks9
-JakobeLittle496
-NicoleChungly24
-dandanvbaymon1
-TheRealAvery_Wobble
-TheRealDawnWraith
-TheRealSpiritWolf202
-WakeRedmoor736
-Ar33jCind3rRunn3r625
-Lubna_Viral9373
-N0uranScythe5717
-Scott_Legend2889
-Sh3rin3_Circuit6272
-Ev3lynSurg39473
-Rav3n_Ech0Runn3r149
-SkaterMoon7830
-SaberNovaCore1227
-Sara_Striker3476
-CelestialNinja2363
-DylanTurb04417
-OrbitFlame9392
-Tyler_Mystic6649
-Shad0wHunterNight137
-MunaShadowStrik39603
-Matth3wHyp3r7162
-Ghassan_Beast8886
-V0id_StellarHunter99
-EhabShad0wStrik351
-Bac0nSniper724
-Nancy_Venom1701
-A3th3rSpark6676
-Craft_RiftRunner8057
-CryptShad32382
-LaylaNebula9271
-SuleimanVanta1506
-Aurora_Chaos2176
-Dylan_Sky6592
-Louis_Phoenix5300
-NovaStrike_Scythe555
-Zoom_QuantumHunter63
-GhassanAlpha3574
-HatemChase3030
-Luca_Panda3663
-Noor_Fire1104
-Afaf_LunarHunter3568
-Remy_Crypt4454
-Sky_Thunder8246
-NicoCosmicHunt3r322
-Harp3r_SolarRunn3r94
-Fusion_Storm9158
-ImanKing6712
-AlaaOblivion3735
-Om3gaEchoRunn3r1758
-ViperPixel8336
-LunaFlash650
-Iman_VortexHunter163
+-- Chặn chạy 2 lần (đặt đầu tiên để không tốn thời gian chờ vô ích)
+if getgenv().TCFG_Loaded then return end
+getgenv().TCFG_Loaded = true
+
+-- Đợi game load xong
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+-- Đợi người chơi + GUI + nhân vật (có giới hạn thời gian, không chờ cứng)
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+if not plr then
+    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
+    plr = Players.LocalPlayer
+end
+
+plr:WaitForChild("PlayerGui")
+
+local waited = 0
+while not plr.Character and waited < 10 do
+    task.wait(0.25)
+    waited += 0.25
+end
+
+task.wait(1) -- nếu script bị lỗi do load sớm thì tăng lên 2-3
+
+-- Tắt render 3D sớm để máy đỡ nặng lúc load
+pcall(function()
+    game:GetService("RunService"):Set3dRenderingEnabled(false)
+end)
+
+-- ================== CONFIG ==================
+script_key = "oRcqKKmdvQEmkNqhEjjfFWcgYGqKeouQ"
+getgenv().DisableGui = true
+getgenv().TCFG = {
+    AutoFarm = true,
+    CloseGUI = true,
+    Open2ndChest = true,
+    AutoExecute = false,
+    FailSafe = true,
+    FailSafeTimer = 19,
+
+    EquipWeapon = false,
+    Weapon = "Blades",
+
+    HoverMethod = "Regular",
+    HoverSpeed = 2000,
+
+    Disable3dRendering = true,
+    NoTitanLag = true,
+
+    MissionTimer = 20,
+    MultiHit = 9,
+    InfiniteSpears = true,
+
+    AutoRetry = true,
+    AutoReload = true,
+    LobbyReturn = true,
+    LobbyReturnAmount = 15,
+
+    StreakDie = true,
+    StreakToDieAt = 5000,
+    LeaveIfOtherPlayers = true,
+
+    AutoStart = true,
+    AutoStartDelay = 5, -- giảm từ 15 để vào map nhanh hơn (tăng lại nếu bị lỗi)
+    AutoStartType = "Missions",
+    AutoStartMap = "Shiganshina",
+    AutoStartObjective = "Breach",
+    AutoStartDifficulty = "Hardest",
+    AutoStartModifiers = {
+        "No Perks", "No Skills", "No Memories", "Nightmare",
+        "Oddball", "Injury Prone", "Chronic Injuries", "Fog",
+        "Glass Cannon", "Time Trial"
+    },
+
+    AutoSpearQuests = false,
+
+    AutoUpgrade = true,
+    AutoPrestige = true,
+    PrestigeBoost = "Gold Boost",
+    PrestigeGold1 = 0,
+    PrestigeGold2 = 0,
+    PrestigeGold3 = 300000000,
+    PrestigeGold4 = 550000000,
+    PrestigeGold5 = 750000000,
+
+    AutoBoosts = true,
+    Boosts = {"2x Gold Boost [30m]"},
+
+    ClaimQuests = true,
+    AutoSkillTree = true,
+    LeftPath = "Skill Cooldown",
+    MiddlePath = "Damage",
+    RightPath = "Damage Reduction",
+    PathPriority = "Middle",
+
+    DeletePerks = true,
+    PerksToDelete = {"Common"},
+
+    EquipPerks = true,
+    BodySlot = "Unparalleled Strength",
+    OffenseSlot = "Kengo",
+    DefenseSlot = "Immortal",
+    SupportSlot = "Tatsujin",
+
+    UpgradePerks = true,
+    SlotToUpgrade = "Body",
+    RarityToUpgradeWith = {"Common", "Rare", "Epic"},
+
+    AutoSlot = true,
+    Slot = "A",
+    PrivateServerCode = "",
+
+    Webhook = true,
+    WebhookLink = "YOUR_DISCORD_WEBHOOK_URL",
+    WebhookDiscordID = "473755357274046464",
+    WebhookShowUsername = true,
+
+    RollFamily = false,
+    Families = {
+        "FRITZ", "HELOS", "SHIKI", "ACKERMAN", "YEAGER",
+        "REISS", "ZOE", "TYBUR", "LEONHART", "GALLIARD",
+        "FINGER", "BRAUN", "ARLERT", "KSAVER", "SMITH",
+        "SPRINGER", "KIRSTEIN", "GRICE", "AZUMABITO",
+        "BRAUS", "KRUGER", "REEVES", "BLOUSE",
+        "INOCENIO", "MUNSELL", "BOYEGA", "RAL", "BOZADO",
+        "PIKALE", "HUME", "IGLEHAUT"
+    },
+    FamilyRollCooldown = 0.1,
+    DepositMythics = false,
+    PingOnMythicFamily = false,
+}
+
+-- ================== LOADER ==================
+local url = "https://api.luarmor.net/files/v4/loaders/5bfd68232034676923088ca8b6698be7.lua"
+local success = false
+
+for attempt = 1, 5 do
+    local ok, err = pcall(function()
+        loadstring(game:HttpGet(url))()
+    end)
+    if ok then
+        success = true
+        break
+    end
+    warn("[Autoexec] Lần " .. attempt .. " lỗi: " .. tostring(err))
+    task.wait(1)
+end
+
+if not success then
+    getgenv().TCFG_Loaded = nil
+    warn("[Autoexec] Tải script thất bại sau 5 lần thử")
+end
