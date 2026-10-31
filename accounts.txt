@@ -82,9 +82,9 @@ getgenv().TCFG = {
     PrestigeBoost = "Gold Boost",
     PrestigeGold1 = 0,
     PrestigeGold2 = 0,
-    PrestigeGold3 = 300000000,
-    PrestigeGold4 = 550000000,
-    PrestigeGold5 = 750000000,
+    PrestigeGold3 = 600000000,
+    PrestigeGold4 = 600000000,
+    PrestigeGold5 = 600000000,
 
     AutoBoosts = true,
     Boosts = {"2x Gold Boost [30m]"},
