@@ -1,80 +1,19 @@
--- ================== CHỐNG CHẠY TRÙNG (theo server) ==================
-if getgenv().TCFG_JobId == game.JobId then return end
-getgenv().TCFG_JobId = game.JobId
-
--- ================== THÔNG BÁO TỪNG BƯỚC (kèm số giây đã trôi qua) ==================
-local T0 = os.clock()
-local function notify(t)
-    local msg = string.format("[%.1fs] %s", os.clock() - T0, t)
-    print("[Autoexec] " .. msg)
-    pcall(function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Autoexec",
-            Text = msg,
-            Duration = 4
-        })
-    end)
-end
-notify("Script bắt đầu chạy")
-
--- ================== ĐỢI GAME / NGƯỜI CHƠI ==================
+-- Đợi game và người chơi load xong
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
-notify("Game đã load")
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-
-local plr = Players.LocalPlayer
-if not plr then
-    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
-    plr = Players.LocalPlayer
+while not Players.LocalPlayer do
+    task.wait()
 end
+Players.LocalPlayer:WaitForChild("PlayerGui")
+task.wait(5)
 
-plr:WaitForChild("PlayerGui")
+-- Chặn chạy 2 lần
+if getgenv().TCFG_Loaded then return end
+getgenv().TCFG_Loaded = true
 
--- Không chặn chờ nhân vật nữa: game này tạo nhân vật trễ (sau màn hình loading/vào map)
--- nên chờ ở đây có thể làm script khởi động rất muộn. Chỉ chờ ngắn tối đa 2 giây.
-local waited = 0
-while not plr.Character and waited < 2 do
-    task.wait(0.25)
-    waited += 0.25
-end
-notify("Người chơi sẵn sàng")
-
--- ================== ĐỢI GAME HẾT LAG LÚC VÀO ==================
--- Game thường lag nặng vài giây đầu khi vừa vào. Nạp hub lúc đó sẽ làm hub bật chức năng rất chậm.
--- Đoạn này chờ tới khi FPS ổn định (>= 25) rồi mới tải hub, tối đa 20 giây.
-local function waitStableFps(minFps, timeout)
-    local start = os.clock()
-    local frames, t0 = 0, os.clock()
-    local conn = RunService.Heartbeat:Connect(function()
-        frames += 1
-    end)
-    local stable = false
-    while os.clock() - start < timeout do
-        task.wait(1)
-        local now = os.clock()
-        local fps = frames / (now - t0)
-        frames, t0 = 0, now
-        if fps >= minFps then
-            stable = true
-            break
-        end
-    end
-    conn:Disconnect()
-    return stable
-end
-
-local WAIT_STABLE_FPS = false -- đổi thành true nếu muốn đợi game hết lag rồi mới tải hub
-if WAIT_STABLE_FPS then
-    notify("Đang đợi game ổn định...")
-    local stable = waitStableFps(25, 20)
-    notify(stable and "Game đã ổn định" or "Hết thời gian chờ, vẫn tải hub")
-end
-
--- ================== CONFIG ==================
 script_key = "oRcqKKmdvQEmkNqhEjjfFWcgYGqKeouQ"
 getgenv().DisableGui = true
 getgenv().TCFG = {
@@ -108,7 +47,7 @@ getgenv().TCFG = {
     LeaveIfOtherPlayers = true,
 
     AutoStart = true,
-    AutoStartDelay = 10, -- nếu hub bật chậm hoặc lỗi vào map thì tăng lên 15
+    AutoStartDelay = 15,
     AutoStartType = "Missions",
     AutoStartMap = "Shiganshina",
     AutoStartObjective = "Breach",
@@ -177,42 +116,24 @@ getgenv().TCFG = {
     PingOnMythicFamily = false,
 }
 
--- Giữ bản sao config để khôi phục nếu hub làm mất hoặc ghi đè
-local configBackup = getgenv().TCFG
-
--- ================== LOADER ==================
+-- Tải loader, tự thử lại nếu lỗi
 local url = "https://api.luarmor.net/files/v4/loaders/5bfd68232034676923088ca8b6698be7.lua"
 local success = false
 
-notify("Đang tải loader...")
 for attempt = 1, 5 do
     local ok, err = pcall(function()
-        local t1 = os.clock()
-        local src = game:HttpGet(url)
-        notify(string.format("Tải xong loader (%.1fs)", os.clock() - t1))
-        local t2 = os.clock()
-        loadstring(src)()
-        notify(string.format("Loader khởi chạy xong (%.1fs)", os.clock() - t2))
+        loadstring(game:HttpGet(url))()
     end)
     if ok then
         success = true
         break
+    else
+        warn("[Autoexec] Lần " .. attempt .. " lỗi: " .. tostring(err))
+        task.wait(3)
     end
-    warn("[Autoexec] Lần " .. attempt .. " lỗi: " .. tostring(err))
-    notify("Lần " .. attempt .. " lỗi, thử lại...")
-    task.wait(1)
 end
 
-if success then
-    notify("Loader chạy xong")
-    -- Nếu hub làm mất config trong vài giây đầu thì đặt lại
-    task.delay(5, function()
-        if getgenv().TCFG == nil then
-            getgenv().TCFG = configBackup
-            warn("[Autoexec] Config bị mất, đã khôi phục")
-        end
-    end)
-else
-    getgenv().TCFG_JobId = nil
-    notify("Tải script thất bại sau 5 lần thử")
+if not success then
+    getgenv().TCFG_Loaded = nil
+    warn("[Autoexec] Tải script thất bại sau 5 lần thử")
 end
