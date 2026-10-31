@@ -1,13 +1,27 @@
--- Chặn chạy 2 lần (đặt đầu tiên để không tốn thời gian chờ vô ích)
-if getgenv().TCFG_Loaded then return end
-getgenv().TCFG_Loaded = true
+-- ================== CHỐNG CHẠY TRÙNG (theo server) ==================
+-- Dùng JobId thay vì cờ true/false để teleport sang server mới vẫn chạy lại được
+if getgenv().TCFG_JobId == game.JobId then return end
+getgenv().TCFG_JobId = game.JobId
 
--- Đợi game load xong
+-- ================== THÔNG BÁO TỪNG BƯỚC ==================
+local function notify(t)
+    print("[Autoexec] " .. t)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Autoexec",
+            Text = t,
+            Duration = 4
+        })
+    end)
+end
+notify("Script bắt đầu chạy")
+
+-- ================== ĐỢI GAME / NGƯỜI CHƠI ==================
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
+notify("Game đã load")
 
--- Đợi người chơi + GUI + nhân vật (có giới hạn thời gian, không chờ cứng)
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 if not plr then
@@ -23,16 +37,17 @@ while not plr.Character and waited < 10 do
     waited += 0.25
 end
 
-task.wait(1) -- nếu script bị lỗi do load sớm thì tăng lên 2-3
+task.wait(1) -- nếu script lỗi do load sớm thì tăng lên 2-3
+notify("Người chơi sẵn sàng")
 
--- Tắt render 3D sớm để máy đỡ nặng lúc load
+-- Tắt render 3D sớm để máy đỡ nặng
 pcall(function()
     game:GetService("RunService"):Set3dRenderingEnabled(false)
 end)
 
 -- ================== CONFIG ==================
 script_key = "oRcqKKmdvQEmkNqhEjjfFWcgYGqKeouQ"
-getgenv().DisableGui = true
+getgenv().DisableGui = false -- để false cho tới khi chắc chắn script chạy ổn, rồi đổi lại true
 getgenv().TCFG = {
     AutoFarm = true,
     CloseGUI = true,
@@ -64,7 +79,7 @@ getgenv().TCFG = {
     LeaveIfOtherPlayers = true,
 
     AutoStart = true,
-    AutoStartDelay = 5, -- giảm từ 15 để vào map nhanh hơn (tăng lại nếu bị lỗi)
+    AutoStartDelay = 5, -- nếu bị lỗi vào map thì tăng lên 10-15
     AutoStartType = "Missions",
     AutoStartMap = "Shiganshina",
     AutoStartObjective = "Breach",
@@ -137,6 +152,7 @@ getgenv().TCFG = {
 local url = "https://api.luarmor.net/files/v4/loaders/5bfd68232034676923088ca8b6698be7.lua"
 local success = false
 
+notify("Đang tải loader...")
 for attempt = 1, 5 do
     local ok, err = pcall(function()
         loadstring(game:HttpGet(url))()
@@ -146,10 +162,13 @@ for attempt = 1, 5 do
         break
     end
     warn("[Autoexec] Lần " .. attempt .. " lỗi: " .. tostring(err))
+    notify("Lần " .. attempt .. " lỗi, thử lại...")
     task.wait(1)
 end
 
-if not success then
-    getgenv().TCFG_Loaded = nil
-    warn("[Autoexec] Tải script thất bại sau 5 lần thử")
+if success then
+    notify("Loader chạy xong")
+else
+    getgenv().TCFG_JobId = nil
+    notify("Tải script thất bại sau 5 lần thử")
 end
