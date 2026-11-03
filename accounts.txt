@@ -3,7 +3,7 @@ getgenv().VenozChicken = {
     -- ===== ปรับได้ =====
     Slot                   = "A",                -- สล็อตตัวละครที่ฟาร์ม ("A" / "B" / "C")
     PrestigeTarget         = 5,                  -- จุติถึง P ไหน (0 = ไม่จุติ)
-    GoldReq                = {0, 0, 0, 200, 650},  -- ทองที่ต้องมีก่อนจุติ หน่วยล้าน (P0→1, 1→2, 2→3, 3→4, 4→5)
+    GoldReq                = {0, 0, 0, 0, 650},  -- ทองที่ต้องมีก่อนจุติ หน่วยล้าน (P0→1, 1→2, 2→3, 3→4, 4→5)
     AutoThunderSpearQuest  = true,               -- ทำเควสหอกสายฟ้า (false = ไม่ทำ)
     ThunderSpearAtPrestige = 4,                  -- เริ่มทำหอกตอน P ไหน
     RejoinLog              = true,               -- ส่ง log ไป Horst/Masterp/Storm (false = มี log ของตัวเองแล้ว)
