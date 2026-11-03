@@ -32,19 +32,26 @@ task.spawn(function()
     notify(string.format("Tải trước loader xong (%.1fs)", os.clock() - t1))
 end)
 
--- ================== ĐỢI GAME (không chờ cứng) ==================
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
+-- ================== CHẾ ĐỘ KHỞI ĐỘNG SỚM ==================
+-- true  = chạy hub ngay, không chờ game load xong (hub tự khởi tạo song song với lúc game load -> nhanh hơn)
+-- false = chờ game + PlayerGui sẵn sàng rồi mới chạy hub (ổn định hơn nếu bản true bị lỗi)
+local EARLY_START = true
 
-local Players = game:GetService("Players")
-local plr = Players.LocalPlayer
-if not plr then
-    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
-    plr = Players.LocalPlayer
+if not EARLY_START then
+    -- ================== ĐỢI GAME (không chờ cứng) ==================
+    if not game:IsLoaded() then
+        game.Loaded:Wait()
+    end
+
+    local Players = game:GetService("Players")
+    local plr = Players.LocalPlayer
+    if not plr then
+        Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
+        plr = Players.LocalPlayer
+    end
+    plr:WaitForChild("PlayerGui")
+    notify("Người chơi sẵn sàng")
 end
-plr:WaitForChild("PlayerGui")
-notify("Người chơi sẵn sàng")
 
 -- ================== CONFIG ==================
 getgenv().VenozChicken = {
