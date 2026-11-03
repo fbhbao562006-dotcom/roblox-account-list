@@ -1,139 +1,101 @@
--- Đợi game và người chơi load xong
+-- ================== CHỐNG CHẠY TRÙNG (theo server) ==================
+if getgenv().VZ_JobId == game.JobId then return end
+getgenv().VZ_JobId = game.JobId
+
+-- ================== THÔNG BÁO KÈM SỐ GIÂY ==================
+local T0 = os.clock()
+local function notify(t)
+    local msg = string.format("[%.1fs] %s", os.clock() - T0, t)
+    print("[Autoexec] " .. msg)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Autoexec", Text = msg, Duration = 4
+        })
+    end)
+end
+notify("Script bắt đầu chạy")
+
+-- ================== ĐỢI GAME (không chờ cứng) ==================
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
 local Players = game:GetService("Players")
-while not Players.LocalPlayer do
-    task.wait()
+local plr = Players.LocalPlayer
+if not plr then
+    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
+    plr = Players.LocalPlayer
 end
-Players.LocalPlayer:WaitForChild("PlayerGui")
-task.wait(5)
+plr:WaitForChild("PlayerGui")
+notify("Người chơi sẵn sàng")
 
--- Chặn chạy 2 lần
-if getgenv().TCFG_Loaded then return end
-getgenv().TCFG_Loaded = true
+-- ================== CONFIG ==================
+getgenv().VenozChicken = {
+    -- ===== ปรับได้ =====
+    Slot                   = "A",                -- สล็อตตัวละครที่ฟาร์ม ("A" / "B" / "C")
+    PrestigeTarget         = 5,                  -- จุติถึง P ไหน (0 = ไม่จุติ)
+    GoldReq                = {0, 0, 0, 0, 650},  -- ทองที่ต้องมีก่อนจุติ หน่วยล้าน (P0→1, 1→2, 2→3, 3→4, 4→5)
+    AutoThunderSpearQuest  = true,               -- ทำเควสหอกสายฟ้า (false = ไม่ทำ)
+    ThunderSpearAtPrestige = 4,                  -- เริ่มทำหอกตอน P ไหน
+    RejoinLog              = true,               -- ส่ง log ไป Horst/Masterp/Storm (false = มี log ของตัวเองแล้ว)
 
-script_key = "oRcqKKmdvQEmkNqhEjjfFWcgYGqKeouQ"
-getgenv().DisableGui = true
-getgenv().TCFG = {
-    AutoFarm = true,
-    CloseGUI = true,
-    Open2ndChest = true,
-    AutoExecute = false,
-    FailSafe = true,
-    FailSafeTimer = 19,
+    -- modifier ที่ติ๊กตอนสร้างด่าน (ห้ามใส่ Boring/Simple: -20% และชนกับ Nightmare/Oddball)
+    Modifiers = {"No Perks", "No Skills", "No Memories", "Nightmare", "Oddball",
+                 "Injury Prone", "Chronic Injuries", "Fog", "Glass Cannon",
+                 "Time Trial", "Fatigue", "Evolution"},
 
-    EquipWeapon = false,
-    Weapon = "Blades",
+    -- 🎃 ฟักทอง / boost (ซื้อได้เฉพาะตอนอยู่ lobby)
+    BoostTypes            = {"Gold"},  -- ยาที่ซื้อ+ใช้เอง
+    BoostUsePumpkins      = true,    -- ซื้อยาด้วยฟักทองก่อน (ไม่พอค่อยใช้เพชร)
+    MinPumpkinsKeep       = 0,       -- เก็บฟักทองไว้อย่างน้อยเท่านี้
+    MinGemsToBuyBoosts    = 4499,    -- เพชรขั้นต่ำก่อนยอมใช้เพชรซื้อยา
+    EventCosmetics        = {"Jester's Mallet", "Green Goblin", "Frankenstein"},  -- ของ Event ซื้อครั้งเดียว ({} = ไม่ซื้อ)
+    SpookyCratesPerLobby  = 0,       -- ซื้อ Spooky Crate กี่กล่องต่อการเข้า lobby (0 = ไม่ซื้อ)
+    AutoLuckySpinExchange = true,    -- มี Tokens 899 → แลก Lucky Spin เก็บไว้ (ไม่สุ่ม)
 
-    HoverMethod = "Regular",
-    HoverSpeed = 2000,
+    -- 💉 ขายเซรั่มทิ้งตามชนิด (เซรั่มเต็ม 5 แล้วตัวอื่นไม่ดรอป) ตัวที่ใส่อยู่ไม่ขาย | {} = ไม่ขาย
+    --    ชนิด: "Attack", "Armored", "Female", "Colossal", "Beast"
+    SellSerums            = { "Attack", "Armored", "Female", "Colossal" },
 
-    Disable3dRendering = true,
-    NoTitanLag = true,
+    -- CPU
+    FPS         = 30,      -- เดิม 20: FPS ต่ำทำให้สคริปต์เริ่มและทำงานช้า (ถ้าเครื่องแรงพอควรตั้ง 60; อยากประหยัดเครื่องค่อยลดเป็น 30)
+    LowGraphic  = true,    -- กราฟิกต่ำ
+    AntiLag     = true,    -- ลบเอฟเฟกต์ / ลดแลค
+    Disable3D   = true,    -- จอขาว ไม่เรนเดอร์ (false = เห็นภาพเกม)
+    DisableChat = true,    -- ปิดแชท
+    LoadTimeout = 10,      -- เดิม 30: หน้า LOADING ค้างเกินกี่วิ → ซ่อนทิ้งเอง (ลดลงเพื่อไม่ต้องรอนาน)
 
-    MissionTimer = 20,
-    MultiHit = 9,
-    InfiniteSpears = true,
-
-    AutoRetry = true,
-    AutoReload = true,
-    LobbyReturn = true,
-    LobbyReturnAmount = 15,
-
-    StreakDie = true,
-    StreakToDieAt = 5000,
-    LeaveIfOtherPlayers = true,
-
-    AutoStart = true,
-    AutoStartDelay = 15,
-    AutoStartType = "Missions",
-    AutoStartMap = "Shiganshina",
-    AutoStartObjective = "Breach",
-    AutoStartDifficulty = "Hardest",
-    AutoStartModifiers = {
-        "No Perks", "No Skills", "No Memories", "Nightmare",
-        "Oddball", "Injury Prone", "Chronic Injuries", "Fog",
-        "Glass Cannon", "Time Trial"
-    },
-
-    AutoSpearQuests = false,
-
-    AutoUpgrade = true,
-    AutoPrestige = true,
-    PrestigeBoost = "Gold Boost",
-    PrestigeGold1 = 0,
-    PrestigeGold2 = 0,
-    PrestigeGold3 = 300000000,
-    PrestigeGold4 = 550000000,
-    PrestigeGold5 = 750000000,
-
-    AutoBoosts = true,
-    Boosts = {"2x Gold Boost [30m]"},
-
-    ClaimQuests = true,
-    AutoSkillTree = true,
-    LeftPath = "Skill Cooldown",
-    MiddlePath = "Damage",
-    RightPath = "Damage Reduction",
-    PathPriority = "Middle",
-
-    DeletePerks = true,
-    PerksToDelete = {"Common"},
-
-    EquipPerks = true,
-    BodySlot = "Unparalleled Strength",
-    OffenseSlot = "Kengo",
-    DefenseSlot = "Immortal",
-    SupportSlot = "Tatsujin",
-
-    UpgradePerks = true,
-    SlotToUpgrade = "Body",
-    RarityToUpgradeWith = {"Common", "Rare", "Epic"},
-
-    AutoSlot = true,
-    Slot = "A",
-    PrivateServerCode = "",
-
-    Webhook = true,
-    WebhookLink = "YOUR_DISCORD_WEBHOOK_URL",
-    WebhookDiscordID = "473755357274046464",
-    WebhookShowUsername = true,
-
-    RollFamily = false,
-    Families = {
-        "FRITZ", "HELOS", "SHIKI", "ACKERMAN", "YEAGER",
-        "REISS", "ZOE", "TYBUR", "LEONHART", "GALLIARD",
-        "FINGER", "BRAUN", "ARLERT", "KSAVER", "SMITH",
-        "SPRINGER", "KIRSTEIN", "GRICE", "AZUMABITO",
-        "BRAUS", "KRUGER", "REEVES", "BLOUSE",
-        "INOCENIO", "MUNSELL", "BOYEGA", "RAL", "BOZADO",
-        "PIKALE", "HUME", "IGLEHAUT"
-    },
-    FamilyRollCooldown = 0.1,
-    DepositMythics = false,
-    PingOnMythicFamily = false,
+    -- ===== ไม่ต้องแก้ (ห้ามลบ ไม่งั้นบอทตีไม่ตาย) =====
+    Enabled = false, HitCap = 50, ForceChapel = false,
+    AutoQuest = true, AutoAchieve = true, AutoSkills = true,
 }
 
--- Tải loader, tự thử lại nếu lỗi
-local url = "https://api.luarmor.net/files/v4/loaders/5bfd68232034676923088ca8b6698be7.lua"
+script_key = "hamsterdiwa-cTx5Bc94XHV8GUghaIJyeTYo"
+
+-- ================== LOADER (วัดเวลา + ลองใหม่) ==================
+local url = "https://hamsterdiwa.com/loader/aotr"
 local success = false
 
+notify("Đang tải loader...")
 for attempt = 1, 5 do
     local ok, err = pcall(function()
-        loadstring(game:HttpGet(url))()
+        local t1 = os.clock()
+        local src = game:HttpGet(url)
+        notify(string.format("Tải xong loader (%.1fs)", os.clock() - t1))
+        local t2 = os.clock()
+        loadstring(src)()
+        notify(string.format("Loader khởi chạy xong (%.1fs)", os.clock() - t2))
     end)
     if ok then
         success = true
         break
-    else
-        warn("[Autoexec] Lần " .. attempt .. " lỗi: " .. tostring(err))
-        task.wait(3)
     end
+    warn("[Autoexec] Lần " .. attempt .. " lỗi: " .. tostring(err))
+    notify("Lần " .. attempt .. " lỗi, thử lại...")
+    task.wait(1)
 end
 
 if not success then
-    getgenv().TCFG_Loaded = nil
-    warn("[Autoexec] Tải script thất bại sau 5 lần thử")
+    getgenv().VZ_JobId = nil
+    notify("Tải script thất bại sau 5 lần thử")
 end
