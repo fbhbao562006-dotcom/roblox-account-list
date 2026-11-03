@@ -18,7 +18,7 @@ notify("Script bắt đầu chạy")
 -- ================== GIỮ MÁY "TỈNH" LÚC KHỞI ĐỘNG (thử nghiệm) ==================
 -- Triệu chứng: chạm màn hình thì load nhanh, không chạm thì chậm -> máy/Roblox đang hạ FPS khi không có thao tác.
 -- Đoạn này gửi thao tác ảo nhẹ trong 45 giây đầu. Nếu không thấy khác biệt thì đặt KEEP_AWAKE = false.
-local KEEP_AWAKE = true
+local KEEP_AWAKE = false
 if KEEP_AWAKE then
     task.spawn(function()
         local t0 = os.clock()
@@ -57,7 +57,7 @@ end)
 -- ================== CHẾ ĐỘ KHỞI ĐỘNG SỚM ==================
 -- true  = chạy hub ngay, không chờ game load xong (hub tự khởi tạo song song với lúc game load -> nhanh hơn)
 -- false = chờ game + PlayerGui sẵn sàng rồi mới chạy hub (ổn định hơn nếu bản true bị lỗi)
-local EARLY_START = true
+local EARLY_START = false
 
 if not EARLY_START then
     -- ================== ĐỢI GAME (không chờ cứng) ==================
