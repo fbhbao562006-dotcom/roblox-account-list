@@ -44,9 +44,9 @@ getgenv().Config = {
 	["Auto Summon Great Pumpkin"] = false,
 
 	-- ===== TỐI ƯU FPS =====
-	["Boost Fps"] = true,
+	["Boost Fps"] = false,
 	["White Screen"] = false,
-	["Remove Notifications"] = true
+	["Remove Notifications"] = false,
 }
 getgenv().Key = "98d3b27f56e73f46d5701f0c"
 getgenv().__BANANA_SCRIPT_ROUTE = "mainbf"
