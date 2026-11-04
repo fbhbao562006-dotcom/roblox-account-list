@@ -45,7 +45,7 @@ getgenv().Config = {
 
 	-- ===== TỐI ƯU FPS =====
 	["Boost Fps"] = true,
-	["White Screen"] = true,
+	["White Screen"] = false,
 	["Remove Notifications"] = true
 }
 getgenv().Key = "98d3b27f56e73f46d5701f0c"
