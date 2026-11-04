@@ -30,23 +30,20 @@ getgenv().Config = {
 
 	-- ===== AUTO STORE DEVIL FRUIT =====
 	["Auto Store Fruit"] = true,
-	["Webhook Store Fruit"] = false,
 
 	-- ===== SỰ KIỆN HALLOWEEN =====
 	["Auto Event Halloween"] = true,
 	["Auto Halloween Bosses"] = true,
 	["Auto Spooky Gacha"] = true,
-	["Auto Close Gacha UI"] = false,
-	["Auto Event Magnet"] = true,
-	["Use Cannon to Break Vases"] = true,
+	["Auto Close Gacha UI"] = true,
 	["Auto Farm Pumpkins"] = false,
 	["Auto Farm Jack o' Lantern & Pumpkin Snowman"] = false,
 	["Auto Summon Great Pumpkin"] = false,
 
 	-- ===== TỐI ƯU FPS =====
-	["Boost Fps"] = false,
-	["White Screen"] = false,
-	["Remove Notifications"] = false,
+	["Boost Fps"] = true,
+	["White Screen"] = true,
+	["Remove Notifications"] = true,
 }
 getgenv().Key = "98d3b27f56e73f46d5701f0c"
 getgenv().__BANANA_SCRIPT_ROUTE = "mainbf"
