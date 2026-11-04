@@ -12,6 +12,7 @@ getgenv().Configs = {
     ["Auto Use Buso"] = true,
     ["Auto Use Ken"] = true,
     ["Kill At"] = 25,
+    ["Auto Store Fruit"] = true,
 
     ["Distance X"] = -52,
     ["Distance Y"] = 15,
