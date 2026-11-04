@@ -27,7 +27,7 @@ getgenv().Configs = {
     ["Hold V"] = 0,
 
     ["Auto Farm Pumpkins"] = false,
-    ["Fight Pumpkin Spawns"] = true,
+    ["Fight Pumpkin Spawns"] = false,
     ["Pumpkin Priority"] = "Cursed Seed First",
     ["Pumpkin Candy Target"] = "5000",
     ["Stop Pumpkins At Candy Target"] = false,
