@@ -1,47 +1,53 @@
-getgenv().Configs = {
-    ["Language / ภาษา / Ngôn ngữ"] = "English",
-    ["Theme"] = "Maru Blue",
-    ["Remove Notify Text"] = true,
+getgenv().Config = {
+	-- ===== AUTO FARM =====
+	["Start Farm"] = true,
+	["Select Method Farm"] = "Level Farm",
+	["Select Weapon"] = "Melee",
+	["Select Skills Melee"] = {
+		["X"] = true,
+		["C"] = true,
+		["Z"] = true
+	},
+	["Auto Click"] = true,
+	["Attack No Animation "] = true,
+	["Auto Turn On Buso"] = true,
+	["Bring Mob"] = true,
+	["Bring Mob Count"] = 2,
+	["Distance Farm Aura"] = 300,
+	["FastTween Speed"] = 350,
+	["Health %"] = 40,
 
-    ["Auto Farm Level"] = true,
-    ["Auto Dressrosa Quest"] = true,
-    ["Bring Mob"] = true,
-    ["Fast Teleport"] = true,
-    ["Tween Speed"] = 140,
-    ["Select Weapon"] = "Melee",
-    ["Auto Use Buso"] = true,
-    ["Auto Use Ken"] = true,
-    ["Kill At"] = 25,
-    ["Auto Store Fruit"] = true,
+	-- ===== QUA NEW WORLD (SEA 2) =====
+	["Auto New World"] = true,
 
-    ["Distance X"] = -52,
-    ["Distance Y"] = 15,
-    ["Distance Z"] = 0,
-    ["Add X Distance"] = 0,
-    ["Add Y Distance"] = 0,
-    ["Add Z Distance"] = 0,
+	-- ===== AUTO NÂNG ĐIỂM =====
+	["Auto Stats"] = true,
+	["Select Stats"] = {
+		["Sword"] = true,
+		["Melee"] = true,
+		["Defense"] = true
+	},
 
-    ["Hold Z"] = 0,
-    ["Hold X"] = 3,
-    ["Hold C"] = 0,
-    ["Hold V"] = 0,
+	-- ===== AUTO STORE DEVIL FRUIT =====
+	["Auto Store Fruit"] = true,
+	["Webhook Store Fruit"] = false,
 
-    ["Auto Farm Pumpkins"] = false,
-    ["Fight Pumpkin Spawns"] = false,
-    ["Pumpkin Priority"] = "Cursed Seed First",
-    ["Pumpkin Candy Target"] = "5000",
-    ["Stop Pumpkins At Candy Target"] = false,
-    ["Auto Trick Or Treat"] = true,
-    ["Auto Spooky Gacha"] = true,
-    ["Auto Halloween Bosses"] = true,
-    ["Halloween Boss Combat Settings"] = "Farm Settings",
-    ["Halloween Boss Normal Attacks"] = true,
-    ["Halloween Boss Weapon Mode"] = "Rotate Weapons",
-    ["Halloween Weapon"] = "Melee",
-    ["Select Halloween Boss Weapon"] = { ["Melee"] = true },
-    ["Select Halloween Boss Skill"] = {},
-    ["Use Halloween Boss Skills"] = false,
+	-- ===== SỰ KIỆN HALLOWEEN =====
+	["Auto Event Halloween"] = true,
+	["Auto Halloween Bosses"] = true,
+	["Auto Spooky Gacha"] = true,
+	["Auto Close Gacha UI"] = true,
+	["Auto Event Magnet"] = true,
+	["Use Cannon to Break Vases"] = true,
+	["Auto Farm Pumpkins"] = false,
+	["Auto Farm Jack o' Lantern & Pumpkin Snowman"] = false,
+	["Auto Summon Great Pumpkin"] = false,
+
+	-- ===== TỐI ƯU FPS =====
+	["Boost Fps"] = true,
+	["White Screen"] = true,
+	["Remove Notifications"] = true
 }
-getgenv().Key = "MARU-8P7XC-Z4YS2-FGWP-MV1Q-UTP6"
-getgenv().id = "986783047057805323"
-loadstring(game:HttpGet("https://cdn.maruhub.online/s/mobile"))()
+getgenv().Key = "98d3b27f56e73f46d5701f0c"
+getgenv().__BANANA_SCRIPT_ROUTE = "mainbf"
+return loadstring(game:HttpGet("https://banana-hub.xyz/loader/banana.lua"))()
