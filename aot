@@ -34,6 +34,8 @@ getgenv().Configs = {
 
     -- ===== REMOVE THÔNG BÁO =====
     ["Remove Notify Text"] = true,
+    ["FPS Boost"] = true,
+    ["Remove Rock"] = true,
 
     -- ===== WEBHOOK =====
     ["Webhook URL"] = "https://discord.com/api/webhooks/1470774351912636598/jCwj3aDaC7DvH8Psj4ffXc-CDWv4HcUmEMzhQjDZxhKLPpi-NT_PN9lTUCyexLWmSSOI",
