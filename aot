@@ -1,5 +1,5 @@
 getgenv().Configs = {
-    ["Auto Stats"] = false,
+    ["Auto Stats"] = true,
     ["Select Stats"] = { ["Defense"] = true, ["Melee"] = true },
     ["Auto Farm Level"] = true,
     ["Select Weapon"] = "Melee",
