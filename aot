@@ -1,32 +1,28 @@
-getgenv().Configs = {
-    ["Auto Stats"] = true,
-    ["Select Stats"] = { ["Defense"] = true, ["Melee"] = true },
-    ["Auto Farm Level"] = true,
-    ["Select Weapon"] = "Melee",
-    ["Bring Mob"] = true,
-    ["Auto Dressrosa Quest"] = false,
-    ["Auto Halloween Bosses"] = true,
-    ["Auto Spooky Gacha"] = true,
-    ["Auto Trick Or Treat"] = true,
-    ["Auto Farm Pumpkins"] = false,
-    ["Auto Summon Great Pumpkin"] = false,
-    ["Fight Pumpkin Spawns"] = false,
-    ["Pumpkin Candy Target"] = "5000",
-    ["Pumpkin Priority"] = "Cursed Seed First",
-    ["Stop Pumpkins At Candy Target"] = false,
-    ["Halloween Boss Combat Settings"] = "Farm Settings",
-    ["Halloween Boss Normal Attacks"] = true,
-    ["Halloween Boss Weapon Mode"] = "Rotate Weapons",
-    ["Halloween Weapon"] = "Melee",
-    ["Select Halloween Boss Skill"] = {},
-    ["Select Halloween Boss Weapon"] = { ["Melee"] = true },
-    ["Spooky Gacha Webhook"] = true,
-    ["Auto Store Fruit"] = true,
-    ["Remove Notify Text"] = true,
+getgenv().Config = getgenv().Config or {
+    Key = "TRAU_PREMIUM_22E72C3A082F88CA59059D0617B7065C21BC1A35BB7A0841", -- Để trống để dùng getgenv().Key, key đã lưu hoặc nhập qua UI.
+    Team = "Marines",
+    Mode = "Halloween",--"Pumpkin Patch" chỉ farm/hop patch, không tự vào Great Pumpkin
+    ["Auto Melee"] = true, -- Tự cộng điểm Melee.
+    ["Auto Random Candy"] = true,
+    ["Skip Random UI"] = true,
+    ["Auto Store"] = true,
+    ["Hide Notifications"] = true,
     ["FPS Boost"] = true,
-    ["Remove Rock"] = true,
-    ["Webhook URL"] = "https://discord.com/api/webhooks/1470774351912636598/jCwj3aDaC7DvH8Psj4ffXc-CDWv4HcUmEMzhQjDZxhKLPpi-NT_PN9lTUCyexLWmSSOI",
+    ["Hop Pumpkin Patch"] = false, -- Tự bật trong chế độ Pumpkin Patch.
+    ["Auto Summon Great Pumpkin"] = true,
+    ["Auto Coven Witch Hat"] = true,
+    ["Auto Candy Concoction"] = false,
+    ["Oni Celestial Choice"] = "Celestial (Right)",
+    ["Weapon"] = "Melee",
+    ["Farm Height"] = 25,
+    ["Tween Speed"] = 195,
+    ["Use Portals"] = true,
+    ["Show UI"] = true,
+    ["Auto Load"] = true, -- Tự chạy lại và giữ config khi chuyển server.
+    ["Webhook URL"] = "https://discord.com/api/webhooks/1470774351912636598/jCwj3aDaC7DvH8Psj4ffXc-CDWv4HcUmEMzhQjDZxhKLPpi-NT_PN9lTUCyexLWmSSOI", -- Để trống để tắt webhook.
+    ["Webhook Store Fruit"] = true,
+    ["Webhook Boss Spawn"] = true,
+    ["Webhook Farm"] = true, -- Báo hạ boss và tiến độ farm.
+    ["Webhook Farm Interval"] = 300, -- Giây; 300 = 5 phút.
 }
-getgenv().Key = "MARU-8P7XC-Z4YS2-FGWP-MV1Q-UTP6"
-getgenv().id = "986783047057805323"
-loadstring(game:HttpGet("https://cdn.maruhub.online/s/mobile"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/realkidhub/realkid/refs/heads/main/KaitunHalloween.lua"))()
