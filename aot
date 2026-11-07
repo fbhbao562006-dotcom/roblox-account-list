@@ -1,17 +1,10 @@
 getgenv().Configs = {
-    -- ===== NÂNG ĐIỂM (STATS) =====
     ["Auto Stats"] = false,
     ["Select Stats"] = { ["Defense"] = true, ["Melee"] = true },
-
-    -- ===== FARM LEVEL =====
     ["Auto Farm Level"] = true,
     ["Select Weapon"] = "Melee",
     ["Bring Mob"] = true,
-
-    -- ===== QUEST DRESSROSA =====
     ["Auto Dressrosa Quest"] = false,
-
-    -- ===== SỰ KIỆN HALLOWEEN =====
     ["Auto Halloween Bosses"] = true,
     ["Auto Spooky Gacha"] = true,
     ["Auto Trick Or Treat"] = true,
@@ -28,16 +21,10 @@ getgenv().Configs = {
     ["Select Halloween Boss Skill"] = {},
     ["Select Halloween Boss Weapon"] = { ["Melee"] = true },
     ["Spooky Gacha Webhook"] = true,
-
-    -- ===== TỰ CẤT TRÁI =====
     ["Auto Store Fruit"] = true,
-
-    -- ===== REMOVE THÔNG BÁO =====
     ["Remove Notify Text"] = true,
     ["FPS Boost"] = true,
     ["Remove Rock"] = true,
-
-    -- ===== WEBHOOK =====
     ["Webhook URL"] = "https://discord.com/api/webhooks/1470774351912636598/jCwj3aDaC7DvH8Psj4ffXc-CDWv4HcUmEMzhQjDZxhKLPpi-NT_PN9lTUCyexLWmSSOI",
 }
 getgenv().Key = "MARU-8P7XC-Z4YS2-FGWP-MV1Q-UTP6"
