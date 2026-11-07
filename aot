@@ -9,7 +9,7 @@ getgenv().Configs = {
     ["Bring Mob"] = true,
 
     -- ===== QUEST DRESSROSA =====
-    ["Auto Dressrosa Quest"] = true,
+    ["Auto Dressrosa Quest"] = false,
 
     -- ===== SỰ KIỆN HALLOWEEN =====
     ["Auto Halloween Bosses"] = true,
